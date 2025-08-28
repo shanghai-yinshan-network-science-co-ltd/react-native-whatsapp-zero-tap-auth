@@ -25,6 +25,8 @@ A React Native module that implements WhatsApp Zero Tap Authentication, based on
 
 ## 安装 / Installation
 
+### 通过 NPM / Via NPM
+
 ```sh
 npm install react-native-whatsapp-zero-tap-auth
 ```
@@ -33,6 +35,35 @@ npm install react-native-whatsapp-zero-tap-auth
 
 ```sh
 yarn add react-native-whatsapp-zero-tap-auth
+```
+
+### 通过 GitHub 直接安装 / Direct Installation from GitHub
+
+如果您想使用最新的开发版本或 NPM 包尚未发布，可以直接从 GitHub 安装：
+
+If you want to use the latest development version or the NPM package is not yet published, you can install directly from GitHub:
+
+```sh
+# 使用最新的 master 分支 / Use latest master branch
+npm install git+https://github.com/shanghai-yinshan-network-science-co-ltd/react-native-whatsapp-zero-tap-auth.git
+
+# 或使用 yarn / Or with yarn
+yarn add git+https://github.com/shanghai-yinshan-network-science-co-ltd/react-native-whatsapp-zero-tap-auth.git
+
+# 或使用 pnpm / Or with pnpm
+pnpm add git+https://github.com/shanghai-yinshan-network-science-co-ltd/react-native-whatsapp-zero-tap-auth.git
+```
+
+您也可以在 `package.json` 中直接配置：
+
+You can also configure it directly in `package.json`:
+
+```json
+{
+  "dependencies": {
+    "react-native-whatsapp-zero-tap-auth": "git+https://github.com/shanghai-yinshan-network-science-co-ltd/react-native-whatsapp-zero-tap-auth.git"
+  }
+}
 ```
 
 ### 自动配置 / Auto Configuration
