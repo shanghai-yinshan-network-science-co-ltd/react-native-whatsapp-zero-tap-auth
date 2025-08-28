@@ -60,6 +60,7 @@ npm install react-native-whatsapp-zero-tap-auth@legacy
 
 ### Android 配置
 
+#### 1. 手动链接包
 确保在 `MainApplication.java` 或 `MainApplication.kt` 中添加包：
 
 ```kotlin
@@ -79,6 +80,31 @@ class MainApplication : Application(), ReactApplication {
         }
     }
 }
+```
+
+#### 2. Gradle 配置
+确保你的项目的 `android/build.gradle` 兼容 RN 0.72：
+
+```gradle
+buildscript {
+    ext {
+        buildToolsVersion = "34.0.0"
+        minSdkVersion = 24
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        kotlinVersion = "1.8.0"
+    }
+}
+```
+
+#### 3. 清单文件权限
+该库会自动添加必要的权限，但如果遇到问题，请确保 `android/app/src/main/AndroidManifest.xml` 包含：
+
+```xml
+<queries>
+  <package android:name="com.whatsapp"/>
+  <package android:name="com.whatsapp.w4b"/>
+</queries>
 ```
 
 ### iOS 配置

@@ -1,5 +1,6 @@
 #import "WhatsappZeroTapAuth.h"
 #import <React/RCTUtils.h>
+#import <UIKit/UIKit.h>
 
 @implementation WhatsappZeroTapAuth
 
