@@ -2,6 +2,7 @@
   "name": "react-native-whatsapp-zero-tap-auth",
   "version": "0.1.0",
   "description": "whatsapp-zero-tap-auth",
+  "private": true,
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
