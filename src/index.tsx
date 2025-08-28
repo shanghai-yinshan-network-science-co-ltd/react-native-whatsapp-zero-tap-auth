@@ -1,5 +1,5 @@
 import WhatsappZeroTapAuth from './NativeWhatsappZeroTapAuth';
-import { DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
+import { DeviceEventEmitter, Platform } from 'react-native';
 import type { AppSignatureInfo, DeviceInfo } from './NativeWhatsappZeroTapAuth';
 
 // 事件名称常量
@@ -74,13 +74,18 @@ export function getDeviceInfo(): Promise<DeviceInfo> {
 /**
  * 添加验证码接收事件监听器
  */
-export function addOtpReceivedListener(listener: OtpReceivedListener): () => void {
+export function addOtpReceivedListener(
+  listener: OtpReceivedListener
+): () => void {
   if (Platform.OS !== 'android') {
     console.warn('WhatsApp零点击认证仅在Android平台支持');
     return () => {};
   }
 
-  const subscription = DeviceEventEmitter.addListener(OTP_EVENTS.OTP_RECEIVED, listener);
+  const subscription = DeviceEventEmitter.addListener(
+    OTP_EVENTS.OTP_RECEIVED,
+    listener
+  );
   return () => subscription.remove();
 }
 
@@ -93,7 +98,10 @@ export function addOtpErrorListener(listener: OtpErrorListener): () => void {
     return () => {};
   }
 
-  const subscription = DeviceEventEmitter.addListener(OTP_EVENTS.OTP_ERROR, listener);
+  const subscription = DeviceEventEmitter.addListener(
+    OTP_EVENTS.OTP_ERROR,
+    listener
+  );
   return () => subscription.remove();
 }
 
@@ -124,7 +132,7 @@ export class WhatsAppZeroTapAuth {
     this.stopListening();
 
     this.otpReceivedUnsubscribe = addOtpReceivedListener(onOtpReceived);
-    
+
     if (onOtpError) {
       this.otpErrorUnsubscribe = addOtpErrorListener(onOtpError);
     }
@@ -155,7 +163,7 @@ export class WhatsAppZeroTapAuth {
       if (Platform.OS !== 'android') {
         return {
           success: false,
-          message: 'WhatsApp零点击认证仅在Android平台支持'
+          message: 'WhatsApp零点击认证仅在Android平台支持',
         };
       }
 
@@ -164,7 +172,7 @@ export class WhatsAppZeroTapAuth {
       if (!isInstalled) {
         return {
           success: false,
-          message: 'WhatsApp未安装，请先安装WhatsApp应用'
+          message: 'WhatsApp未安装，请先安装WhatsApp应用',
         };
       }
 
@@ -177,19 +185,20 @@ export class WhatsAppZeroTapAuth {
         this.stopListening();
         return {
           success: false,
-          message: '与WhatsApp握手失败'
+          message: '与WhatsApp握手失败',
         };
       }
 
       return {
         success: true,
-        message: '已发起握手，等待接收验证码。现在可以通过API发送验证码模板消息。'
+        message:
+          '已发起握手，等待接收验证码。现在可以通过API发送验证码模板消息。',
       };
     } catch (error) {
       this.stopListening();
       return {
         success: false,
-        message: `请求验证码失败: ${error instanceof Error ? error.message : String(error)}`
+        message: `请求验证码失败: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   }

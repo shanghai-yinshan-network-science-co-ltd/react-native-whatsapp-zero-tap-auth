@@ -1,5 +1,5 @@
-#import <WhatsappZeroTapAuthSpec/WhatsappZeroTapAuthSpec.h>
+#import <React/RCTBridgeModule.h>
 
-@interface WhatsappZeroTapAuth : NSObject <NativeWhatsappZeroTapAuthSpec>
+@interface WhatsappZeroTapAuth : NSObject <RCTBridgeModule>
 
 @end

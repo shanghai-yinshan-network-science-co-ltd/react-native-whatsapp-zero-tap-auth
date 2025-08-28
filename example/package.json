@@ -10,24 +10,25 @@
     "build:ios": "react-native build-ios --mode Debug"
   },
   "dependencies": {
-    "@react-native/new-app-screen": "0.81.0",
-    "react": "19.1.0",
-    "react-native": "0.81.0",
-    "react-native-safe-area-context": "^5.5.2"
+    "@react-native-community/netinfo": "^9.5.0",
+    "react": "18.2.0",
+    "react-native": "0.72.15",
+    "react-native-safe-area-context": "^4.7.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
-    "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "20.0.0",
-    "@react-native-community/cli-platform-android": "20.0.0",
-    "@react-native-community/cli-platform-ios": "20.0.0",
-    "@react-native/babel-preset": "0.81.0",
-    "@react-native/metro-config": "0.81.0",
-    "@react-native/typescript-config": "0.81.0",
-    "@types/react": "^19.1.0",
-    "react-native-builder-bob": "^0.40.13",
-    "react-native-monorepo-config": "^0.1.9"
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/runtime": "^7.20.0",
+    "@react-native/babel-preset": "0.72.21",
+    "@react-native/metro-config": "0.72.21",
+    "@types/react": "^18.0.24",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-jest": "^29.2.1",
+    "jest": "^29.2.1",
+    "metro-react-native-babel-preset": "0.76.8",
+    "prettier": "^2.4.1",
+    "react-test-renderer": "18.2.0",
+    "typescript": "4.8.4"
   },
   "engines": {
     "node": ">=18"
