@@ -1,2 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  
+  <!-- WhatsApp零点击认证所需的查询权限 -->
+  <queries>
+    <package android:name="com.whatsapp"/>
+    <package android:name="com.whatsapp.w4b"/>
+  </queries>
+
+  <application>
+    <!-- WhatsApp零点击验证码接收器 -->
+    <receiver
+      android:name="com.whatsappzerotapauth.OtpCodeReceiver"
+      android:enabled="true"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="com.whatsapp.otp.OTP_RETRIEVED" />
+      </intent-filter>
+    </receiver>
+  </application>
+  
 </manifest>
