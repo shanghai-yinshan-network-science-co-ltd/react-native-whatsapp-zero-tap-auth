@@ -3,19 +3,18 @@
   "version": "0.1.0",
   "description": "whatsapp-zero-tap-auth",
   "private": true,
-  "main": "./lib/module/index.js",
-  "types": "./lib/typescript/src/index.d.ts",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
   "exports": {
     ".": {
       "source": "./src/index.tsx",
-      "types": "./lib/typescript/src/index.d.ts",
-      "default": "./lib/module/index.js"
+      "types": "./src/index.tsx",
+      "default": "./src/index.tsx"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "src",
-    "lib",
     "android",
     "ios",
     "cpp",
@@ -38,8 +37,8 @@
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "build": "bob build",
-    "prepublishOnly": "bob build",
+    "build": "echo 'No build step needed - using source files directly'",
+    "prepublishOnly": "echo 'No build step needed - using source files directly'",
     "release": "release-it --only-version"
   },
   "keywords": [
