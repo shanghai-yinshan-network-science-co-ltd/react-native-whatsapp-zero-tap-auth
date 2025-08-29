@@ -1,8 +1,10 @@
-import { TurboModuleRegistry, type TurboModule } from 'react-native';
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
 
+// 类型定义
 export interface AppSignatureInfo {
-  signatureHash: string;
   packageName: string;
+  signatureHash: string;
 }
 
 export interface DeviceInfo {
@@ -14,13 +16,15 @@ export interface DeviceInfo {
 
 export interface Spec extends TurboModule {
   multiply(a: number, b: number): number;
-  
-  // WhatsApp零点击认证相关方法
   isWhatsAppInstalled(): Promise<boolean>;
   getInstalledWhatsAppApps(): Promise<string[]>;
   initiateHandshake(): Promise<boolean>;
   getAppSignatureHash(): Promise<AppSignatureInfo>;
   getDeviceInfo(): Promise<DeviceInfo>;
+  addListener(eventName: string): void;
+  removeListeners(count: number): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('WhatsappZeroTapAuth');
+export default TurboModuleRegistry.get<Spec>(
+  'WhatsappZeroTapAuth'
+) as Spec | null;

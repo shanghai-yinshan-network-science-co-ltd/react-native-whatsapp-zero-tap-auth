@@ -1,5 +1,5 @@
 import WhatsappZeroTapAuth from './NativeWhatsappZeroTapAuth';
-import { DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
+import { DeviceEventEmitter, Platform } from 'react-native';
 import type { AppSignatureInfo, DeviceInfo } from './NativeWhatsappZeroTapAuth';
 
 // 事件名称常量
@@ -32,21 +32,21 @@ export type { AppSignatureInfo, DeviceInfo };
  * 两个数字相乘（示例方法）
  */
 export function multiply(a: number, b: number): number {
-  return WhatsappZeroTapAuth.multiply(a, b);
+  return WhatsappZeroTapAuth?.multiply(a, b) ?? 0;
 }
 
 /**
  * 检查WhatsApp是否已安装
  */
 export function isWhatsAppInstalled(): Promise<boolean> {
-  return WhatsappZeroTapAuth.isWhatsAppInstalled();
+  return WhatsappZeroTapAuth?.isWhatsAppInstalled() ?? Promise.resolve(false);
 }
 
 /**
  * 获取已安装的WhatsApp应用列表
  */
 export function getInstalledWhatsAppApps(): Promise<string[]> {
-  return WhatsappZeroTapAuth.getInstalledWhatsAppApps();
+  return WhatsappZeroTapAuth?.getInstalledWhatsAppApps() ?? Promise.resolve([]);
 }
 
 /**
@@ -54,33 +54,44 @@ export function getInstalledWhatsAppApps(): Promise<string[]> {
  * 必须在发送验证码模板消息之前调用
  */
 export function initiateHandshake(): Promise<boolean> {
-  return WhatsappZeroTapAuth.initiateHandshake();
+  return WhatsappZeroTapAuth?.initiateHandshake() ?? Promise.resolve(false);
 }
 
 /**
  * 获取应用签名哈希（用于配置WhatsApp模板）
  */
 export function getAppSignatureHash(): Promise<AppSignatureInfo> {
-  return WhatsappZeroTapAuth.getAppSignatureHash();
+  return (
+    WhatsappZeroTapAuth?.getAppSignatureHash() ??
+    Promise.reject(new Error('Native module not available'))
+  );
 }
 
 /**
  * 获取设备信息（用于调试）
  */
 export function getDeviceInfo(): Promise<DeviceInfo> {
-  return WhatsappZeroTapAuth.getDeviceInfo();
+  return (
+    WhatsappZeroTapAuth?.getDeviceInfo() ??
+    Promise.reject(new Error('Native module not available'))
+  );
 }
 
 /**
  * 添加验证码接收事件监听器
  */
-export function addOtpReceivedListener(listener: OtpReceivedListener): () => void {
+export function addOtpReceivedListener(
+  listener: OtpReceivedListener
+): () => void {
   if (Platform.OS !== 'android') {
     console.warn('WhatsApp零点击认证仅在Android平台支持');
     return () => {};
   }
 
-  const subscription = DeviceEventEmitter.addListener(OTP_EVENTS.OTP_RECEIVED, listener);
+  const subscription = DeviceEventEmitter.addListener(
+    OTP_EVENTS.OTP_RECEIVED,
+    listener
+  );
   return () => subscription.remove();
 }
 
@@ -93,7 +104,10 @@ export function addOtpErrorListener(listener: OtpErrorListener): () => void {
     return () => {};
   }
 
-  const subscription = DeviceEventEmitter.addListener(OTP_EVENTS.OTP_ERROR, listener);
+  const subscription = DeviceEventEmitter.addListener(
+    OTP_EVENTS.OTP_ERROR,
+    listener
+  );
   return () => subscription.remove();
 }
 
@@ -124,7 +138,7 @@ export class WhatsAppZeroTapAuth {
     this.stopListening();
 
     this.otpReceivedUnsubscribe = addOtpReceivedListener(onOtpReceived);
-    
+
     if (onOtpError) {
       this.otpErrorUnsubscribe = addOtpErrorListener(onOtpError);
     }
@@ -155,7 +169,7 @@ export class WhatsAppZeroTapAuth {
       if (Platform.OS !== 'android') {
         return {
           success: false,
-          message: 'WhatsApp零点击认证仅在Android平台支持'
+          message: 'WhatsApp零点击认证仅在Android平台支持',
         };
       }
 
@@ -164,7 +178,7 @@ export class WhatsAppZeroTapAuth {
       if (!isInstalled) {
         return {
           success: false,
-          message: 'WhatsApp未安装，请先安装WhatsApp应用'
+          message: 'WhatsApp未安装，请先安装WhatsApp应用',
         };
       }
 
@@ -177,19 +191,20 @@ export class WhatsAppZeroTapAuth {
         this.stopListening();
         return {
           success: false,
-          message: '与WhatsApp握手失败'
+          message: '与WhatsApp握手失败',
         };
       }
 
       return {
         success: true,
-        message: '已发起握手，等待接收验证码。现在可以通过API发送验证码模板消息。'
+        message:
+          '已发起握手，等待接收验证码。现在可以通过API发送验证码模板消息。',
       };
     } catch (error) {
       this.stopListening();
       return {
         success: false,
-        message: `请求验证码失败: ${error instanceof Error ? error.message : String(error)}`
+        message: `请求验证码失败: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   }

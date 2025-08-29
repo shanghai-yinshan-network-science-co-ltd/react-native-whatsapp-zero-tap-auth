@@ -2,18 +2,19 @@ package com.whatsappzerotapauth
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.module.annotations.ReactModule
 import android.util.Log
 
-@ReactModule(name = WhatsappZeroTapAuthModule.NAME)
-class WhatsappZeroTapAuthModule(reactContext: ReactApplicationContext) :
-  NativeWhatsappZeroTapAuthSpec(reactContext) {
+/**
+ * 共享的实现逻辑类，供新老架构模块使用
+ */
+class WhatsappZeroTapAuthModuleImpl(private val reactContext: ReactApplicationContext) {
 
   companion object {
     const val NAME = "WhatsappZeroTapAuth"
-    private const val TAG = "WhatsappZeroTapAuthModule"
+    private const val TAG = "WhatsappZeroTapAuthModuleImpl"
   }
   
   private val otpHandler = WhatsAppOtpHandler()
@@ -23,20 +24,16 @@ class WhatsappZeroTapAuthModule(reactContext: ReactApplicationContext) :
     OtpCodeReceiver.setReactContext(reactContext)
   }
 
-  override fun getName(): String {
-    return NAME
-  }
-
-  override fun multiply(a: Double, b: Double): Double {
+  fun multiply(a: Double, b: Double): Double {
     return a * b
   }
 
   /**
    * 检查WhatsApp是否已安装
    */
-  override fun isWhatsAppInstalled(promise: Promise) {
+  fun isWhatsAppInstalled(promise: Promise) {
     try {
-      val isInstalled = otpHandler.isWhatsAppInstalled(reactApplicationContext)
+      val isInstalled = otpHandler.isWhatsAppInstalled(reactContext)
       Log.d(TAG, "WhatsApp安装检查结果: $isInstalled")
       promise.resolve(isInstalled)
     } catch (e: Exception) {
@@ -48,9 +45,9 @@ class WhatsappZeroTapAuthModule(reactContext: ReactApplicationContext) :
   /**
    * 获取已安装的WhatsApp应用列表
    */
-  override fun getInstalledWhatsAppApps(promise: Promise) {
+  fun getInstalledWhatsAppApps(promise: Promise) {
     try {
-      val installedApps = otpHandler.getInstalledWhatsAppApps(reactApplicationContext)
+      val installedApps = otpHandler.getInstalledWhatsAppApps(reactContext)
       val result = Arguments.createArray()
       installedApps.forEach { packageName ->
         result.pushString(packageName)
@@ -66,9 +63,9 @@ class WhatsappZeroTapAuthModule(reactContext: ReactApplicationContext) :
   /**
    * 发起与WhatsApp的握手
    */
-  override fun initiateHandshake(promise: Promise) {
+  fun initiateHandshake(promise: Promise) {
     try {
-      val success = otpHandler.sendOtpIntentToWhatsApp(reactApplicationContext)
+      val success = otpHandler.sendOtpIntentToWhatsApp(reactContext)
       Log.d(TAG, "握手发起结果: $success")
       
       if (success) {
@@ -85,16 +82,16 @@ class WhatsappZeroTapAuthModule(reactContext: ReactApplicationContext) :
   /**
    * 获取应用签名哈希（用于配置WhatsApp模板）
    */
-  override fun getAppSignatureHash(promise: Promise) {
+  fun getAppSignatureHash(promise: Promise) {
     try {
-      val signatureHash = otpHandler.getAppSignatureHash(reactApplicationContext)
+      val signatureHash = otpHandler.getAppSignatureHash(reactContext)
       
       if (signatureHash != null) {
         val result = Arguments.createMap().apply {
           putString("signatureHash", signatureHash)
-          putString("packageName", reactApplicationContext.packageName)
+          putString("packageName", reactContext.packageName)
         }
-        Log.d(TAG, "应用签名信息: 包名=${reactApplicationContext.packageName}, 哈希=$signatureHash")
+        Log.d(TAG, "应用签名信息: 包名=${reactContext.packageName}, 哈希=$signatureHash")
         promise.resolve(result)
       } else {
         promise.reject("SIGNATURE_ERROR", "无法获取应用签名哈希")
@@ -108,10 +105,10 @@ class WhatsappZeroTapAuthModule(reactContext: ReactApplicationContext) :
   /**
    * 获取设备信息（用于调试）
    */
-  override fun getDeviceInfo(promise: Promise) {
+  fun getDeviceInfo(promise: Promise) {
     try {
       val result = Arguments.createMap().apply {
-        putString("packageName", reactApplicationContext.packageName)
+        putString("packageName", reactContext.packageName)
         putString("sdkVersion", android.os.Build.VERSION.SDK_INT.toString())
         putString("deviceModel", android.os.Build.MODEL)
         putString("manufacturer", android.os.Build.MANUFACTURER)

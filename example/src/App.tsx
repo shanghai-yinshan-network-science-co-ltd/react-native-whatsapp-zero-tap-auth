@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -21,9 +21,13 @@ import {
 } from 'react-native-whatsapp-zero-tap-auth';
 
 export default function App() {
-  const [isWhatsAppInstalled_, setIsWhatsAppInstalled] = useState<boolean | null>(null);
+  const [isWhatsAppInstalled_, setIsWhatsAppInstalled] = useState<
+    boolean | null
+  >(null);
   const [installedApps, setInstalledApps] = useState<string[]>([]);
-  const [signatureInfo, setSignatureInfo] = useState<AppSignatureInfo | null>(null);
+  const [signatureInfo, setSignatureInfo] = useState<AppSignatureInfo | null>(
+    null
+  );
   const [deviceInfo_, setDeviceInfo] = useState<DeviceInfo | null>(null);
   const [otpAuth] = useState(() => new WhatsAppZeroTapAuth());
   const [isListening, setIsListening] = useState(false);
@@ -35,7 +39,7 @@ export default function App() {
     try {
       const installed = await isWhatsAppInstalled();
       setIsWhatsAppInstalled(installed);
-      
+
       if (installed) {
         const apps = await getInstalledWhatsAppApps();
         setInstalledApps(apps);
@@ -98,8 +102,11 @@ export default function App() {
       setReceivedOtp(null);
       setLastError(null);
 
-      const result = await otpAuth.requestOtp(handleOtpReceived, handleOtpError);
-      
+      const result = await otpAuth.requestOtp(
+        handleOtpReceived,
+        handleOtpError
+      );
+
       if (result.success) {
         Alert.alert(
           '握手成功',
@@ -127,11 +134,9 @@ export default function App() {
     if (signatureInfo) {
       const info = `Package Name: ${signatureInfo.packageName}\nSignature Hash: ${signatureInfo.signatureHash}`;
       // 这里可以使用Clipboard API复制到剪贴板
-      Alert.alert(
-        '应用签名信息',
-        `${info}\n\n请将此信息用于配置WhatsApp模板`,
-        [{ text: '确定' }]
-      );
+      Alert.alert('应用签名信息', `${info}\n\n请将此信息用于配置WhatsApp模板`, [
+        { text: '确定' },
+      ]);
     }
   }, [signatureInfo]);
 
@@ -139,7 +144,7 @@ export default function App() {
     checkWhatsAppInstallation();
     fetchSignatureInfo();
     fetchDeviceInfo();
-    
+
     // 组件卸载时停止监听
     return () => {
       otpAuth.stopListening();
@@ -159,14 +164,22 @@ export default function App() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>WhatsApp安装状态</Text>
         <Text style={styles.info}>
-          已安装: {isWhatsAppInstalled_ === null ? '检查中...' : isWhatsAppInstalled_ ? '是' : '否'}
+          已安装:{' '}
+          {isWhatsAppInstalled_ === null
+            ? '检查中...'
+            : isWhatsAppInstalled_
+              ? '是'
+              : '否'}
         </Text>
         {installedApps.length > 0 && (
           <Text style={styles.info}>
             已安装应用: {installedApps.join(', ')}
           </Text>
         )}
-        <TouchableOpacity style={styles.button} onPress={checkWhatsAppInstallation}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={checkWhatsAppInstallation}
+        >
           <Text style={styles.buttonText}>重新检查</Text>
         </TouchableOpacity>
       </View>
@@ -177,7 +190,9 @@ export default function App() {
         {signatureInfo ? (
           <View>
             <Text style={styles.info}>包名: {signatureInfo.packageName}</Text>
-            <Text style={styles.info}>签名哈希: {signatureInfo.signatureHash}</Text>
+            <Text style={styles.info}>
+              签名哈希: {signatureInfo.signatureHash}
+            </Text>
             <TouchableOpacity style={styles.button} onPress={copySignatureInfo}>
               <Text style={styles.buttonText}>查看配置信息</Text>
             </TouchableOpacity>
@@ -204,25 +219,23 @@ export default function App() {
       {/* OTP测试 */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>验证码测试</Text>
-        
+
         {Platform.OS === 'android' ? (
           <View>
             <Text style={styles.info}>
               状态: {isListening ? '等待验证码...' : '未监听'}
             </Text>
-            
+
             {receivedOtp && (
               <Text style={[styles.info, styles.success]}>
                 收到验证码: {receivedOtp}
               </Text>
             )}
-            
+
             {lastError && (
-              <Text style={[styles.info, styles.error]}>
-                错误: {lastError}
-              </Text>
+              <Text style={[styles.info, styles.error]}>错误: {lastError}</Text>
             )}
-            
+
             <View style={styles.buttonGroup}>
               <TouchableOpacity
                 style={[styles.button, isListening && styles.buttonDisabled]}
@@ -233,14 +246,14 @@ export default function App() {
                   {isListening ? '监听中...' : '请求验证码'}
                 </Text>
               </TouchableOpacity>
-              
+
               {isListening && (
                 <TouchableOpacity style={styles.button} onPress={stopListening}>
                   <Text style={styles.buttonText}>停止监听</Text>
                 </TouchableOpacity>
               )}
             </View>
-            
+
             <Text style={styles.instructions}>
               使用步骤：{'\n'}
               1. 点击"请求验证码"按钮{'\n'}
