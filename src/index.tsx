@@ -6,6 +6,7 @@ import type { AppSignatureInfo, DeviceInfo } from './NativeWhatsappZeroTapAuth';
 export const OTP_EVENTS = {
   OTP_RECEIVED: 'onOtpReceived',
   OTP_ERROR: 'onOtpError',
+  AUTOFILL_BUTTON_CLICKED: 'onAutofillButtonClicked',
 } as const;
 
 // 事件类型定义
@@ -21,9 +22,16 @@ export interface OtpErrorEvent {
   timestamp: number;
 }
 
+export interface AutofillButtonEvent {
+  code: string;
+  packageName: string;
+  timestamp: number;
+}
+
 // 事件监听器类型
 export type OtpReceivedListener = (event: OtpReceivedEvent) => void;
 export type OtpErrorListener = (event: OtpErrorEvent) => void;
+export type AutofillButtonListener = (event: AutofillButtonEvent) => void;
 
 // 导出类型
 export type { AppSignatureInfo, DeviceInfo };
@@ -112,12 +120,31 @@ export function addOtpErrorListener(listener: OtpErrorListener): () => void {
 }
 
 /**
+ * 添加自动填充按钮点击事件监听器
+ */
+export function addAutofillButtonListener(
+  listener: AutofillButtonListener
+): () => void {
+  if (Platform.OS !== 'android') {
+    console.warn('WhatsApp一键自动填充仅在Android平台支持');
+    return () => {};
+  }
+
+  const subscription = DeviceEventEmitter.addListener(
+    OTP_EVENTS.AUTOFILL_BUTTON_CLICKED,
+    listener
+  );
+  return () => subscription.remove();
+}
+
+/**
  * 移除所有事件监听器
  */
 export function removeAllListeners(): void {
   if (Platform.OS === 'android') {
     DeviceEventEmitter.removeAllListeners(OTP_EVENTS.OTP_RECEIVED);
     DeviceEventEmitter.removeAllListeners(OTP_EVENTS.OTP_ERROR);
+    DeviceEventEmitter.removeAllListeners(OTP_EVENTS.AUTOFILL_BUTTON_CLICKED);
   }
 }
 
@@ -127,13 +154,15 @@ export function removeAllListeners(): void {
 export class WhatsAppZeroTapAuth {
   private otpReceivedUnsubscribe?: () => void;
   private otpErrorUnsubscribe?: () => void;
+  private autofillButtonUnsubscribe?: () => void;
 
   /**
    * 开始监听验证码接收
    */
   startListening(
     onOtpReceived: OtpReceivedListener,
-    onOtpError?: OtpErrorListener
+    onOtpError?: OtpErrorListener,
+    onAutofillButton?: AutofillButtonListener
   ): void {
     this.stopListening();
 
@@ -141,6 +170,11 @@ export class WhatsAppZeroTapAuth {
 
     if (onOtpError) {
       this.otpErrorUnsubscribe = addOtpErrorListener(onOtpError);
+    }
+
+    if (onAutofillButton) {
+      this.autofillButtonUnsubscribe =
+        addAutofillButtonListener(onAutofillButton);
     }
   }
 
@@ -150,19 +184,22 @@ export class WhatsAppZeroTapAuth {
   stopListening(): void {
     this.otpReceivedUnsubscribe?.();
     this.otpErrorUnsubscribe?.();
+    this.autofillButtonUnsubscribe?.();
     this.otpReceivedUnsubscribe = undefined;
     this.otpErrorUnsubscribe = undefined;
+    this.autofillButtonUnsubscribe = undefined;
   }
 
   /**
-   * 请求验证码的完整流程
+   * 请求验证码的完整流程（支持自动填充按钮）
    * 1. 检查WhatsApp是否安装
    * 2. 发起握手
-   * 3. 开始监听验证码接收
+   * 3. 开始监听验证码接收和自动填充按钮点击
    */
   async requestOtp(
     onOtpReceived: OtpReceivedListener,
-    onOtpError?: OtpErrorListener
+    onOtpError?: OtpErrorListener,
+    onAutofillButton?: AutofillButtonListener
   ): Promise<{ success: boolean; message: string }> {
     try {
       // 检查平台支持
@@ -182,8 +219,8 @@ export class WhatsAppZeroTapAuth {
         };
       }
 
-      // 开始监听验证码接收
-      this.startListening(onOtpReceived, onOtpError);
+      // 开始监听验证码接收和自动填充按钮
+      this.startListening(onOtpReceived, onOtpError, onAutofillButton);
 
       // 发起握手
       const handshakeSuccess = await initiateHandshake();

@@ -10,11 +10,13 @@ A React Native module that implements WhatsApp Zero Tap Authentication, based on
 ## 功能特性 / Features
 
 - ✅ 零点击验证码自动接收 / Zero-tap OTP auto-retrieval
+- ✅ 一键自动填充按钮 / One-tap autofill button  
 - ✅ WhatsApp安装状态检查 / WhatsApp installation status check  
 - ✅ 获取应用签名哈希用于配置模板 / Get app signature hash for template configuration
 - ✅ 与WhatsApp的握手机制 / Handshake mechanism with WhatsApp
 - ✅ 完整的事件监听系统 / Complete event listening system
 - ✅ 支持WhatsApp和WhatsApp Business / Support for WhatsApp and WhatsApp Business
+- ✅ 支持新老React Native架构并存 / Support for both new and old React Native architectures
 - ✅ 使用最新的React Native TurboModules架构 / Built with React Native TurboModules architecture
 
 ## 系统要求 / Requirements

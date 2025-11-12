@@ -16,6 +16,16 @@
         <action android:name="com.whatsapp.otp.OTP_RETRIEVED" />
       </intent-filter>
     </receiver>
+    
+    <!-- WhatsApp自动填充按钮接收器 -->
+    <receiver
+      android:name="com.whatsappzerotapauth.AutofillButtonReceiver"
+      android:enabled="true"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="com.whatsapp.otp.AUTOFILL_CODE" />
+      </intent-filter>
+    </receiver>
   </application>
   
 </manifest>

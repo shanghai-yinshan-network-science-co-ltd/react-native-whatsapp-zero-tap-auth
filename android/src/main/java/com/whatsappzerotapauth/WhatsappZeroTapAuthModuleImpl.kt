@@ -22,6 +22,7 @@ class WhatsappZeroTapAuthModuleImpl(private val reactContext: ReactApplicationCo
   init {
     // 设置ReactContext给广播接收器
     OtpCodeReceiver.setReactContext(reactContext)
+    AutofillButtonReceiver.setReactContext(reactContext)
   }
 
   fun multiply(a: Double, b: Double): Double {
