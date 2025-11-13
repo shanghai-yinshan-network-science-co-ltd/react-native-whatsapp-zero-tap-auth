@@ -85,17 +85,28 @@ class WhatsappZeroTapAuthModuleImpl(private val reactContext: ReactApplicationCo
 
   /**
    * 获取应用签名哈希（用于配置WhatsApp模板）
+   * 使用 Google 推荐的 SHA-256 算法，生成11字符的Base64哈希
    */
   fun getAppSignatureHash(promise: Promise) {
     try {
-      val signatureHash = otpHandler.getAppSignatureHash(reactContext)
+      val helper = AppSignatureHelper(reactContext)
+      val signatures = helper.getAppSignatures()
       
-      if (signatureHash != null) {
+      if (signatures.isNotEmpty()) {
         val result = Arguments.createMap().apply {
-          putString("signatureHash", signatureHash)
+          putString("signatureHash", signatures[0])
           putString("packageName", reactContext.packageName)
+          
+          // 如果有多个签名，添加到数组中
+          if (signatures.size > 1) {
+            val signaturesArray = Arguments.createArray()
+            signatures.forEach { sig ->
+              signaturesArray.pushString(sig)
+            }
+            putArray("allSignatures", signaturesArray)
+          }
         }
-        Log.d(TAG, "应用签名信息: 包名=${reactContext.packageName}, 哈希=$signatureHash")
+        Log.d(TAG, "应用签名信息: 包名=${reactContext.packageName}, 哈希=${signatures[0]}")
         promise.resolve(result)
       } else {
         promise.reject("SIGNATURE_ERROR", "无法获取应用签名哈希")
