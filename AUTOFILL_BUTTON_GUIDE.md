@@ -19,8 +19,32 @@
 
 1. **用户请求验证码**：应用发起握手并监听验证码
 2. **WhatsApp 发送模板消息**：包含验证码和自动填充按钮
-3. **用户点击按钮**：WhatsApp 将验证码发送到您的应用
-4. **应用接收验证码**：自动填充到输入框
+3. **用户点击按钮**：WhatsApp 通过 Intent 启动您的应用并传递验证码
+4. **Activity 接收 Intent**：通过 `onNewIntent` 方法接收验证码
+5. **应用处理验证码**：自动填充到输入框
+
+**技术实现：**
+- 使用 `ActivityEventListener` 监听 Activity 的 `onNewIntent` 事件
+- 从 Intent 中提取验证码参数
+- 通过 React Native 事件系统发送到 JavaScript 层
+
+## 前置要求
+
+### MainActivity 配置
+
+**重要：** 自动填充按钮需要在 `AndroidManifest.xml` 中配置 MainActivity 的 `launchMode`。
+
+在您的应用的 `android/app/src/main/AndroidManifest.xml` 中：
+
+```xml
+<activity
+  android:name=".MainActivity"
+  android:launchMode="singleTask"
+  <!-- 其他配置... -->
+</activity>
+```
+
+📖 **详细配置说明：** 请查看 [AUTOFILL_ACTIVITY_CONFIG.md](./AUTOFILL_ACTIVITY_CONFIG.md)
 
 ## 使用方法
 
@@ -275,8 +299,9 @@ const result = await otpAuth.requestOtp(
 
 A: 检查以下几点：
 1. 确保模板配置中的 `package_name` 和 `signature_hash` 正确
-2. 确保 AndroidManifest.xml 中注册了 `AutofillButtonReceiver`
+2. 确保应用的 MainActivity 可以接收 Intent（`android:launchMode` 设置为 `singleTask` 或 `singleTop`）
 3. 检查应用的签名哈希是否与配置一致
+4. 查看日志输出，确认 `onNewIntent` 方法被调用
 
 ### Q: 可以同时支持零点击和自动填充吗？
 

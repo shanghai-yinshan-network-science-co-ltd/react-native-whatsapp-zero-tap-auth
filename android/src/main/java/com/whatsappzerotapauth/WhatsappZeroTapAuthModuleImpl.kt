@@ -18,11 +18,14 @@ class WhatsappZeroTapAuthModuleImpl(private val reactContext: ReactApplicationCo
   }
   
   private val otpHandler = WhatsAppOtpHandler()
+  private val autofillHandler = WhatsAppAutofillHandler(reactContext)
 
   init {
     // 设置ReactContext给广播接收器
     OtpCodeReceiver.setReactContext(reactContext)
-    AutofillButtonReceiver.setReactContext(reactContext)
+    
+    // 注册Activity事件监听器以处理自动填充按钮
+    reactContext.addActivityEventListener(autofillHandler)
   }
 
   fun multiply(a: Double, b: Double): Double {
