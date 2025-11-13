@@ -21,9 +21,12 @@ A React Native module that implements WhatsApp Zero Tap Authentication, based on
 
 ## 系统要求 / Requirements
 
-- **Android Only**: 零点击认证仅在Android平台支持 / Zero tap authentication is only supported on Android
-- **Android API 19+**: 支持Android 4.4及以上版本 / Supports Android 4.4 and above
-- **WhatsApp**: 需要安装WhatsApp或WhatsApp Business应用 / Requires WhatsApp or WhatsApp Business app
+- **Android**: 零点击认证仅在Android平台支持 / Zero tap authentication is only supported on Android
+  - **Android API 19+**: 支持Android 4.4及以上版本 / Supports Android 4.4 and above
+  - **WhatsApp**: 需要安装WhatsApp或WhatsApp Business应用 / Requires WhatsApp or WhatsApp Business app
+- **iOS**: 支持WhatsApp安装检测功能 / Supports WhatsApp installation detection
+  - **iOS 12.0+**: 支持iOS 12.0及以上版本 / Supports iOS 12.0 and above
+  - 需要在Info.plist中配置LSApplicationQueriesSchemes / Requires LSApplicationQueriesSchemes configuration in Info.plist
 
 ## 安装 / Installation
 
@@ -208,9 +211,15 @@ interface DeviceInfo {
 
 ## 完整文档 / Complete Documentation
 
-详细的使用指南和配置说明，请参见 [WHATSAPP_ZERO_TAP_GUIDE.md](./WHATSAPP_ZERO_TAP_GUIDE.md)
+详细的使用指南和配置说明，请参见以下文档：
 
-For detailed usage guide and configuration instructions, see [WHATSAPP_ZERO_TAP_GUIDE.md](./WHATSAPP_ZERO_TAP_GUIDE.md)
+For detailed usage guide and configuration instructions, see the following documents:
+
+- [WhatsApp零点击认证指南 / WhatsApp Zero Tap Guide](./WHATSAPP_ZERO_TAP_GUIDE.md)
+- [iOS WhatsApp检测配置指南 / iOS WhatsApp Detection Guide](./IOS_WHATSAPP_DETECTION_GUIDE.md)
+- [应用签名配置指南 / App Signature Guide](./APP_SIGNATURE_GUIDE.md)
+- [自动填充Activity配置 / Autofill Activity Configuration](./AUTOFILL_ACTIVITY_CONFIG.md)
+- [自动填充按钮指南 / Autofill Button Guide](./AUTOFILL_BUTTON_GUIDE.md)
 
 ## 示例 / Example
 
