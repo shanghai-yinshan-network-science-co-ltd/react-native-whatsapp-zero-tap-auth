@@ -27,16 +27,13 @@ class WhatsAppAutofillHandler(private val reactContext: ReactApplicationContext)
     /**
      * 处理新的Intent（自动填充按钮点击）
      */
-    override fun onNewIntent(intent: Intent?) {
-        Log.d(TAG, "onNewIntent called: ${intent?.action}")
-        
-        intent?.let {
-            handleAutofillIntent(it)
-        }
+    override fun onNewIntent(intent: Intent) {
+        Log.d(TAG, "onNewIntent called: ${intent.action}")
+        handleAutofillIntent(intent)
     }
 
     override fun onActivityResult(
-        activity: Activity?,
+        activity: Activity,
         requestCode: Int,
         resultCode: Int,
         data: Intent?
